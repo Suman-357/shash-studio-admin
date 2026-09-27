@@ -5,6 +5,7 @@ import { OverviewPage } from "./pages/OverviewPage";
 import { BatchesPage } from "./pages/BatchesPage";
 import { BookingsPage } from "./pages/BookingsPage";
 import { InquiriesPage } from "./pages/InquiriesPage";
+import { ProductsPage } from "./pages/ProductsPage";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
           <Route index element={<OverviewPage />} />
           <Route path="batches" element={<BatchesPage />} />
           <Route path="bookings" element={<BookingsPage />} />
+          <Route path="products" element={<ProductsPage />} />
           <Route path="inquiries" element={<InquiriesPage />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>

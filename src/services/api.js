@@ -219,8 +219,128 @@ export const adminApi = {
       body: JSON.stringify({ status, notes })
     });
     return res.json();
+  },
+
+  // Store Products Management
+  getProducts: async () => {
+    try {
+      const res = await fetch(`${API_BASE_URL}/products`);
+      if (res.ok) {
+        const data = await res.json();
+        return data.data;
+      }
+    } catch (err) {
+      console.warn("Using fallback products:", err);
+    }
+    return DEFAULT_PRODUCTS;
+  },
+
+  createProduct: async (productData) => {
+    const res = await fetch(`${API_BASE_URL}/products`, {
+      method: "POST",
+      headers: getHeaders(),
+      body: JSON.stringify(productData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to create product");
+    return data.data;
+  },
+
+  updateProduct: async (id, productData) => {
+    const res = await fetch(`${API_BASE_URL}/products/${id}`, {
+      method: "PUT",
+      headers: getHeaders(),
+      body: JSON.stringify(productData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to update product");
+    return data.data;
+  },
+
+  deleteProduct: async (id) => {
+    const res = await fetch(`${API_BASE_URL}/products/${id}`, {
+      method: "DELETE",
+      headers: getHeaders()
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to delete product");
+    return data.data;
+  },
+
+  // Store Product Orders
+  getProductOrders: async (params = {}) => {
+    try {
+      const query = new URLSearchParams(params).toString();
+      const res = await fetch(`${API_BASE_URL}/products/orders/all?${query}`, {
+        headers: getHeaders()
+      });
+      if (res.ok) {
+        const data = await res.json();
+        return data.data;
+      }
+    } catch (err) {
+      console.warn("Using fallback orders:", err);
+    }
+    return [];
+  },
+
+  updateProductOrderStatus: async (id, statusData) => {
+    const res = await fetch(`${API_BASE_URL}/products/orders/${id}/status`, {
+      method: "PUT",
+      headers: getHeaders(),
+      body: JSON.stringify(statusData)
+    });
+    const data = await res.json();
+    if (!res.ok) throw new Error(data.message || "Failed to update order status");
+    return data.data;
   }
 };
+
+export const api = adminApi;
+export default adminApi;
+
+export const DEFAULT_PRODUCTS = [
+  {
+    _id: "prod-1",
+    slug: "cotton-mat",
+    title: "Mysuru Heritage Handloom Cotton & Jute Yoga Mat",
+    titleKn: "ಕೈಮಗ್ಗದ ಮೈಸೂರು ಸಾವಯವ ಹತ್ತಿ & ಸೆಣಬಿನ ಯೋಗ ಚಾಪೆ",
+    category: "mats",
+    price: 1499,
+    originalPrice: 1999,
+    inStock: true,
+    stockQuantity: 45,
+    badge: "Mysuru Handloom Heritage",
+    image: "/src/assets/mysuru_organic_cotton_mat.jpg"
+  },
+  {
+    _id: "prod-2",
+    slug: "progrip-mat",
+    title: "SHASH Pro-Grip Asana Alignment Eco-Rubber Mat",
+    titleKn: "ಪ್ರೊ-ಗ್ರಿಪ್ ಆಸನ ಅಲೈನ್ಮೆಂಟ್ ಇಕೋ-ರಬ್ಬರ್ ಯೋಗ ಚಾಪೆ",
+    category: "mats",
+    price: 2199,
+    originalPrice: 2799,
+    inStock: true,
+    stockQuantity: 30,
+    badge: "Studio Best-Seller",
+    image: "/src/assets/progrip_rubber_yoga_mat.jpg"
+  },
+  {
+    _id: "prod-3",
+    slug: "cork-props-kit",
+    title: "Mysuru Natural Cork Yoga Blocks & Alignment Strap Duo",
+    titleKn: "ಮೈಸೂರು ನೈಸರ್ಗಿಕ ಓಕ್ ಕಾರ್ಕ್ ಬ್ಲಾಕ್ಸ್ & ಯೋಗ ಸ್ಟ್ರಾಪ್ ಕಿಟ್",
+    category: "props",
+    price: 899,
+    originalPrice: 1299,
+    inStock: true,
+    stockQuantity: 50,
+    badge: "Essential Alignment Duo",
+    image: "/src/assets/cork_yoga_blocks_strap_set.jpg"
+  }
+];
+
 
 // Rich Initial Sample Data (used immediately if backend is empty)
 export const DEFAULT_BATCHES = [

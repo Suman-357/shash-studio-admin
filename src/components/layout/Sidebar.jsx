@@ -13,6 +13,7 @@ export const Sidebar = ({
     { to: "/", label: "Executive Overview", icon: "dashboard", end: true },
     { to: "/batches", label: "Batches & Time Slots", icon: "schedule", count: batchesCount },
     { to: "/bookings", label: "Student Rosters", icon: "groups", count: bookingsCount },
+    { to: "/products", label: "Store & Equipment", icon: "shopping_cart" },
     { to: "/inquiries", label: "Inbound Leads", icon: "forum", count: inquiriesCount }
   ];
 
@@ -28,7 +29,7 @@ export const Sidebar = ({
           <img src={logo} alt="SHASH Studios" className="h-10 w-10 shrink-0 object-contain rounded-lg" />
           {isSidebarOpen && (
             <div className="whitespace-nowrap transition-opacity duration-200">
-              <span className="font-serif text-[16px] font-bold text-[#1C3325] block leading-tight">
+              <span className="font-sans text-[16px] font-extrabold text-[#1C3325] block leading-tight">
                 SHASH Studios
               </span>
               <span className="text-[9.5px] uppercase font-bold tracking-widest text-[#C26D38] block">
