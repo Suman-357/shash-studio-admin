@@ -16,6 +16,7 @@
 }
 
 :root {
+  color-scheme: light;
   --primary: #1C3325;
   --primary-light: #2D4A37;
   --primary-dark: #0D1C13;
