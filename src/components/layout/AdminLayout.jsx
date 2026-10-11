@@ -16,7 +16,7 @@ import {
   useCreateSectionMutation
 } from "../../hooks/useAdminQueries";
 
-export const AdminLayout = () => {
+export const AdminLayout = ({ onLogout }) => {
   const [isSidebarOpen, setIsSidebarOpen] = useState(true);
   const [toastMessage, setToastMessage] = useState(null);
 
@@ -75,6 +75,7 @@ export const AdminLayout = () => {
           isSidebarOpen={isSidebarOpen}
           setIsSidebarOpen={setIsSidebarOpen}
           adminUser={adminUser}
+          onLogout={onLogout}
         />
 
         {/* Scrollable Page Body (Only this area scrolls!) */}

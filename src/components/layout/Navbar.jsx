@@ -2,7 +2,7 @@ import React from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import logo from "../../assets/logo.png";
 
-export const Navbar = ({ isSidebarOpen, setIsSidebarOpen, adminUser }) => {
+export const Navbar = ({ isSidebarOpen, setIsSidebarOpen, adminUser, onLogout }) => {
   const queryClient = useQueryClient();
 
   const handleRefresh = () => {
@@ -84,6 +84,18 @@ export const Navbar = ({ isSidebarOpen, setIsSidebarOpen, adminUser }) => {
             </p>
           </div>
         </div>
+
+        {/* Sign Out */}
+        {onLogout && (
+          <button
+            onClick={onLogout}
+            className="flex h-9 items-center gap-1.5 rounded-full border border-red-200 bg-red-50/80 hover:bg-red-100 text-red-700 px-3 text-[12px] font-semibold transition-colors cursor-pointer"
+            title="Sign out of Admin Dashboard"
+          >
+            <span className="material-symbols-outlined text-[16px]">logout</span>
+            <span className="hidden md:inline">Sign Out</span>
+          </button>
+        )}
       </div>
     </header>
   );

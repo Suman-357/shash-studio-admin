@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useOutletContext, Link } from "react-router-dom";
 
 export const OverviewPage = () => {
-  const { batches, registrations, backendStats } = useOutletContext();
+  const { batches = [], registrations = [], backendStats } = useOutletContext();
   const [viewingBatch, setViewingBatch] = useState(null);
 
   const totalRevenue =

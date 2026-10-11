@@ -2,7 +2,7 @@ import React from "react";
 import { useOutletContext } from "react-router-dom";
 
 export const InquiriesPage = () => {
-  const { inquiries } = useOutletContext();
+  const { inquiries = [] } = useOutletContext();
 
   return (
     <div className="space-y-6">

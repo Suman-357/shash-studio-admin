@@ -4,8 +4,8 @@ import { CustomSelect } from "../components/common/CustomSelect";
 
 export const BatchesPage = () => {
   const {
-    batches,
-    registrations,
+    batches = [],
+    registrations = [],
     sections = [],
     createBatchMutation,
     updateBatchMutation,

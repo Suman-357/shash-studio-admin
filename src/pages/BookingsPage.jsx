@@ -4,7 +4,8 @@ import { CustomSelect } from "../components/common/CustomSelect";
 
 export const BookingsPage = () => {
   const {
-    registrations,
+    batches = [],
+    registrations = [],
     rescheduleStudentMutation,
     togglePaymentMutation,
     showToast
@@ -20,16 +21,27 @@ export const BookingsPage = () => {
     reason: "Student requested alternative morning slot"
   });
 
+  const uniqueSlots = Array.from(new Set(batches.map((b) => b.slotTime).filter(Boolean)));
+  const slotOptions = [
+    { value: "all", label: "All Daily Time Slots", emoji: "🗓️" },
+    ...uniqueSlots.map((slot) => ({
+      value: slot,
+      label: slot,
+      emoji: slot.includes("AM") ? "🌅" : "🌙"
+    }))
+  ];
+
   const filteredRegistrations = registrations.filter((r) => {
-    const matchesSlot = slotFilter === "all" || r.slot.includes(slotFilter);
+    const rSlot = r.slot || "";
+    const matchesSlot = slotFilter === "all" || rSlot.includes(slotFilter);
     const matchesPayment = paymentFilter === "all" || r.paymentStatus === paymentFilter;
     const q = searchQuery.toLowerCase().trim();
     const matchesSearch =
       !q ||
-      r.fullName.toLowerCase().includes(q) ||
-      r.bookingId.toLowerCase().includes(q) ||
-      r.whatsapp.includes(q) ||
-      r.email.toLowerCase().includes(q);
+      (r.fullName && r.fullName.toLowerCase().includes(q)) ||
+      (r.bookingId && r.bookingId.toLowerCase().includes(q)) ||
+      (r.whatsapp && r.whatsapp.includes(q)) ||
+      (r.email && r.email.toLowerCase().includes(q));
     return matchesSlot && matchesPayment && matchesSearch;
   });
 
@@ -96,13 +108,7 @@ export const BookingsPage = () => {
           <CustomSelect
             value={slotFilter}
             onChange={(e) => setSlotFilter(e.target.value)}
-            options={[
-              { value: "all", label: "All Daily Time Slots", emoji: "🗓️" },
-              { value: "5:30 AM", label: "5:30 AM – 6:30 AM (Morning 1)", emoji: "🌅" },
-              { value: "6:30 AM", label: "6:30 AM – 7:30 AM (Morning 2)", emoji: "☀️" },
-              { value: "11:30 AM", label: "11:30 AM – 12:30 PM (Ladies)", emoji: "🌸" },
-              { value: "9:30 PM", label: "9:30 PM – 10:00 PM (Sushii Nights)", emoji: "🌙" }
-            ]}
+            options={slotOptions}
           />
         </div>
 

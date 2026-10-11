@@ -24,6 +24,11 @@ axiosInstance.interceptors.request.use(
 axiosInstance.interceptors.response.use(
   (response) => response.data,
   (error) => {
+    if (error.response?.status === 401) {
+      localStorage.removeItem("shash_admin_token");
+      localStorage.removeItem("shash_admin_user");
+      window.dispatchEvent(new Event("shash_admin_logout"));
+    }
     const message =
       error.response?.data?.message ||
       error.message ||
