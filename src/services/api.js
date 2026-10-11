@@ -1,5 +1,19 @@
 // API Service for SHASH Studios Admin Dashboard
-const API_BASE_URL = "/api/v1";
+const resolveBaseUrl = () => {
+  const rawUrl =
+    import.meta.env.VITE_API_URL ||
+    import.meta.env.VITE_BACKEND_URL ||
+    "";
+
+  if (!rawUrl) return "/api/v1";
+  const clean = rawUrl.trim().replace(/\/+$/, "");
+  if (!clean.endsWith("/api/v1") && !clean.endsWith("/api")) {
+    return `${clean}/api/v1`;
+  }
+  return clean;
+};
+
+const API_BASE_URL = resolveBaseUrl();
 
 const getHeaders = () => {
   const token = localStorage.getItem("shash_admin_token");
