@@ -1,7 +1,30 @@
 import axios from "axios";
 
+export const resolveBaseUrl = () => {
+  let rawUrl = (import.meta.env.VITE_API_URL || "")
+    .trim()
+    .replace(/^["']+|["']+$/g, "");
+
+  if (!rawUrl) {
+    console.error("VITE_API_URL is not configured.");
+    return "";
+  }
+
+  if (!/^https?:\/\//i.test(rawUrl)) {
+    rawUrl =
+      rawUrl.startsWith("localhost") || rawUrl.startsWith("127.0.0.1")
+        ? `http://${rawUrl}`
+        : `https://${rawUrl}`;
+  }
+
+  const clean = rawUrl.replace(/\/+$/, "");
+  if (clean.endsWith("/api/v1")) return clean;
+  if (clean.endsWith("/api")) return `${clean}/v1`;
+  return `${clean}/api/v1`;
+};
+
 const axiosInstance = axios.create({
-  baseURL: "/api/v1",
+  baseURL: resolveBaseUrl(),
   timeout: 15000,
   headers: {
     "Content-Type": "application/json"

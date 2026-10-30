@@ -1,18 +1,6 @@
+import { resolveBaseUrl } from "./axiosInstance.js";
+
 // API Service for SHASH Studios Admin Dashboard
-const resolveBaseUrl = () => {
-  const rawUrl =
-    import.meta.env.VITE_API_URL ||
-    import.meta.env.VITE_BACKEND_URL ||
-    "";
-
-  if (!rawUrl) return "/api/v1";
-  const clean = rawUrl.trim().replace(/\/+$/, "");
-  if (!clean.endsWith("/api/v1") && !clean.endsWith("/api")) {
-    return `${clean}/api/v1`;
-  }
-  return clean;
-};
-
 const API_BASE_URL = resolveBaseUrl();
 
 const getHeaders = () => {
@@ -23,6 +11,14 @@ const getHeaders = () => {
   };
 };
 
+const parseJsonSafe = async (res) => {
+  try {
+    return await res.json();
+  } catch {
+    return {};
+  }
+};
+
 export const adminApi = {
   // Authentication
   login: async (email, password) => {
@@ -31,8 +27,12 @@ export const adminApi = {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ email, password })
     });
-    const data = await res.json();
-    if (!res.ok) throw new Error(data.message || "Invalid email or password");
+    const data = await parseJsonSafe(res);
+    if (!res.ok) {
+      throw new Error(
+        data.message || `Login failed (${res.status} ${res.statusText})`
+      );
+    }
     return data;
   },
 
@@ -41,11 +41,10 @@ export const adminApi = {
     const res = await fetch(`${API_BASE_URL}/batches/overview/stats`, {
       headers: getHeaders()
     });
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch stats");
+      throw new Error(data.message || "Failed to fetch stats");
     }
-    const data = await res.json();
     return data.data;
   },
 
@@ -54,11 +53,10 @@ export const adminApi = {
     const res = await fetch(`${API_BASE_URL}/sections`, {
       headers: getHeaders()
     });
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch sections");
+      throw new Error(data.message || "Failed to fetch sections");
     }
-    const data = await res.json();
     return data.data || [];
   },
 
@@ -68,7 +66,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(sectionData)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to create section");
     return data.data;
   },
@@ -79,7 +77,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(sectionData)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to update section");
     return data.data;
   },
@@ -90,11 +88,10 @@ export const adminApi = {
     const res = await fetch(`${API_BASE_URL}/batches${query ? `?${query}` : ""}`, {
       headers: getHeaders()
     });
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch batches");
+      throw new Error(data.message || "Failed to fetch batches");
     }
-    const data = await res.json();
     return data.data || [];
   },
 
@@ -102,11 +99,10 @@ export const adminApi = {
     const res = await fetch(`${API_BASE_URL}/batches/${id}`, {
       headers: getHeaders()
     });
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch batch details");
+      throw new Error(data.message || "Failed to fetch batch details");
     }
-    const data = await res.json();
     return data.data || null;
   },
 
@@ -116,7 +112,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(batchData)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to create batch");
     return data.data;
   },
@@ -127,7 +123,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(updateData)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to update batch");
     return data.data;
   },
@@ -138,7 +134,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(payload)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to reschedule batch");
     return data.data;
   },
@@ -149,11 +145,10 @@ export const adminApi = {
     const res = await fetch(`${API_BASE_URL}/registrations?${qs}`, {
       headers: getHeaders()
     });
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch registrations");
+      throw new Error(data.message || "Failed to fetch registrations");
     }
-    const data = await res.json();
     return data.data?.registrations || data.data || [];
   },
 
@@ -163,7 +158,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(payload)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to reschedule student");
     return data.data;
   },
@@ -174,7 +169,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify({ status })
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to update payment status");
     return data.data;
   },
@@ -184,11 +179,10 @@ export const adminApi = {
     const res = await fetch(`${API_BASE_URL}/inquiries`, {
       headers: getHeaders()
     });
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch inquiries");
+      throw new Error(data.message || "Failed to fetch inquiries");
     }
-    const data = await res.json();
     return data.data?.inquiries || data.data || [];
   },
 
@@ -198,7 +192,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify({ status, notes })
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to update inquiry");
     return data.data;
   },
@@ -206,11 +200,10 @@ export const adminApi = {
   // Store Products Management
   getProducts: async () => {
     const res = await fetch(`${API_BASE_URL}/products`);
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch products");
+      throw new Error(data.message || "Failed to fetch products");
     }
-    const data = await res.json();
     return data.data || [];
   },
 
@@ -220,7 +213,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(productData)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to create product");
     return data.data;
   },
@@ -231,7 +224,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(productData)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to update product");
     return data.data;
   },
@@ -241,7 +234,7 @@ export const adminApi = {
       method: "DELETE",
       headers: getHeaders()
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to delete product");
     return data.data;
   },
@@ -252,11 +245,10 @@ export const adminApi = {
     const res = await fetch(`${API_BASE_URL}/products/orders/all?${query}`, {
       headers: getHeaders()
     });
+    const data = await parseJsonSafe(res);
     if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || "Failed to fetch orders");
+      throw new Error(data.message || "Failed to fetch orders");
     }
-    const data = await res.json();
     return data.data || [];
   },
 
@@ -266,7 +258,7 @@ export const adminApi = {
       headers: getHeaders(),
       body: JSON.stringify(statusData)
     });
-    const data = await res.json();
+    const data = await parseJsonSafe(res);
     if (!res.ok) throw new Error(data.message || "Failed to update order status");
     return data.data;
   }
