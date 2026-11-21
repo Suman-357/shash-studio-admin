@@ -10,11 +10,12 @@ const EMPTY_FORM = {
   endDate: "",
   duration: "21 Days · 60 Mins Daily",
   ageLimit: "14 years & above",
-  accessLabel: "Zoom Live",
-  youtubePrice: 179,
-  instagramPrice: 45,
-  timingSlot: "6:00 AM – 7:00 AM IST",
-  slotsText: "6:00 AM – 7:00 AM IST, 6:30 PM – 7:30 PM IST",
+  accessLabel: "Live Zoom Classes",
+  memberPrice: 549,
+  memberPriceLabel: "YouTube Members",
+  paymentNote: "One-time payment for whole 21 days (Zoom live class + WhatsApp group access)",
+  timingSlot: "4:30 – 5:30 AM IST",
+  slotsText: "4:30 – 5:30 AM IST",
   price: 699,
   originalPrice: 999,
   capacity: 50,
@@ -61,8 +62,6 @@ export const SpecialEventsPage = () => {
   };
 
   const openEditModal = (ev) => {
-    const ytOpt = (ev.altAccessOptions || []).find((o) => o.platform === "youtube");
-    const igOpt = (ev.altAccessOptions || []).find((o) => o.platform === "instagram");
     setEditingId(ev._id);
     setForm({
       title: ev.title || "",
@@ -73,9 +72,12 @@ export const SpecialEventsPage = () => {
       endDate: ev.endDate ? new Date(ev.endDate).toISOString().slice(0, 10) : "",
       duration: ev.duration || "21 Days · 60 Mins Daily",
       ageLimit: ev.ageLimit || "",
-      accessLabel: ev.accessLabel || "Zoom Live",
-      youtubePrice: ytOpt ? ytOpt.price : "",
-      instagramPrice: igOpt ? igOpt.price : "",
+      accessLabel: ev.accessLabel || "Live Zoom Classes",
+      memberPrice: ev.memberPrice ?? 0,
+      memberPriceLabel: ev.memberPriceLabel || "YouTube Members",
+      paymentNote:
+        ev.paymentNote ||
+        "One-time payment for whole 21 days (Zoom live class + WhatsApp group access)",
       timingSlot: ev.timingSlot || "",
       slotsText: Array.isArray(ev.slots) && ev.slots.length > 0 ? ev.slots.join(", ") : ev.timingSlot || "",
       price: ev.price ?? 699,
@@ -101,26 +103,6 @@ export const SpecialEventsPage = () => {
       .map((s) => s.trim())
       .filter(Boolean);
 
-    const altAccessOptions = [];
-    if (Number(form.youtubePrice) > 0) {
-      altAccessOptions.push({
-        platform: "youtube",
-        label: "YouTube Membership",
-        price: Number(form.youtubePrice),
-        url: "https://www.youtube.com/@sushiidays",
-        note: "Join via @sushiidays YouTube Channel Membership"
-      });
-    }
-    if (Number(form.instagramPrice) > 0) {
-      altAccessOptions.push({
-        platform: "instagram",
-        label: "Instagram Subscribers",
-        price: Number(form.instagramPrice),
-        url: "https://www.instagram.com/sushiidays/",
-        note: "Join via @sushiidays Instagram Subscription"
-      });
-    }
-
     const payload = {
       title: form.title.trim(),
       titleKn: form.titleKn.trim() || form.title.trim(),
@@ -130,8 +112,10 @@ export const SpecialEventsPage = () => {
       endDate: form.endDate || undefined,
       duration: form.duration.trim(),
       ageLimit: form.ageLimit.trim(),
-      accessLabel: form.accessLabel.trim() || "Zoom Live",
-      altAccessOptions,
+      accessLabel: form.accessLabel.trim() || "Live Zoom Classes",
+      memberPrice: Math.max(0, Number(form.memberPrice) || 0),
+      memberPriceLabel: form.memberPriceLabel.trim() || "YouTube Members",
+      paymentNote: form.paymentNote.trim(),
       timingSlot: parsedSlots[0] || form.timingSlot.trim(),
       slots: parsedSlots.length > 0 ? parsedSlots : [form.timingSlot.trim()],
       price: Number(form.price),
@@ -292,17 +276,12 @@ export const SpecialEventsPage = () => {
                     </div>
                   </div>
 
-                  {/* Alternate Platform Memberships */}
-                  {Array.isArray(ev.altAccessOptions) && ev.altAccessOptions.length > 0 && (
+                  {/* YouTube Members Discounted Tier */}
+                  {ev.memberPrice > 0 && (
                     <div className="flex flex-wrap gap-1.5">
-                      {ev.altAccessOptions.map((opt, idx) => (
-                        <span
-                          key={idx}
-                          className="px-2.5 py-0.5 rounded-full bg-[#FEF3D6]/70 border border-[#D48C46]/25 text-[11px] font-bold text-[#9E4E20]"
-                        >
-                          {opt.label}: ₹{opt.price}
-                        </span>
-                      ))}
+                      <span className="px-2.5 py-0.5 rounded-full bg-[#FEF3D6]/70 border border-[#D48C46]/25 text-[11px] font-bold text-[#9E4E20]">
+                        {ev.memberPriceLabel || "YouTube Members"}: ₹{ev.memberPrice}
+                      </span>
                     </div>
                   )}
 
@@ -529,27 +508,26 @@ export const SpecialEventsPage = () => {
                 </div>
                 <div>
                   <label className="block text-[11.5px] font-bold text-[#1C3325] mb-1">
-                    YouTube Membership (₹)
+                    YouTube Members Fee (₹)
                   </label>
                   <input
                     type="number"
                     min={0}
-                    value={form.youtubePrice}
-                    onChange={(e) => setForm({ ...form, youtubePrice: e.target.value })}
-                    placeholder="179"
-                    className="input-text"
+                    value={form.memberPrice}
+                    onChange={(e) => setForm({ ...form, memberPrice: e.target.value })}
+                    placeholder="549"
+                    className="input-text font-bold"
                   />
                 </div>
                 <div>
                   <label className="block text-[11.5px] font-bold text-[#1C3325] mb-1">
-                    Instagram Subscribers (₹)
+                    Payment Note
                   </label>
                   <input
-                    type="number"
-                    min={0}
-                    value={form.instagramPrice}
-                    onChange={(e) => setForm({ ...form, instagramPrice: e.target.value })}
-                    placeholder="45"
+                    type="text"
+                    value={form.paymentNote}
+                    onChange={(e) => setForm({ ...form, paymentNote: e.target.value })}
+                    placeholder="One-time payment for whole 21 days..."
                     className="input-text"
                   />
                 </div>
