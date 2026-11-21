@@ -184,7 +184,14 @@ export const BookingsPage = () => {
                   </td>
                   <td>
                     <div className="font-bold text-[13px]">{reg.slot}</div>
-                    <div className="text-[11px] text-[#5C665F]">{reg.workshopTitle}</div>
+                    <div className="flex items-center gap-1.5 flex-wrap mt-0.5">
+                      <span className="text-[11px] text-[#5C665F]">{reg.workshopTitle}</span>
+                      {reg.registrationType === "special_event" && (
+                        <span className="px-1.5 py-0.5 rounded-full bg-[#FEF3D6] text-[#9E4E20] text-[9.5px] font-extrabold uppercase tracking-wide">
+                          ✦ Special Event
+                        </span>
+                      )}
+                    </div>
                   </td>
                   <td>
                     {reg.rescheduleHistory && reg.rescheduleHistory.length > 0 ? (

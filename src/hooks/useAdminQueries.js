@@ -10,7 +10,9 @@ export const QUERY_KEYS = {
   STATS: ["stats"],
   SECTIONS: ["sections"],
   PRODUCTS: ["products"],
-  ORDERS: ["orders"]
+  ORDERS: ["orders"],
+  SPECIAL_EVENTS: ["special-events"],
+  SPECIAL_EVENT_DETAIL: (id) => ["special-events", id]
 };
 
 // 1. Batches Query
@@ -171,6 +173,62 @@ export const useCreateSectionMutation = () => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: QUERY_KEYS.SECTIONS });
+    }
+  });
+};
+
+// 7. Special Events Query
+export const useSpecialEventsQuery = () => {
+  return useQuery({
+    queryKey: QUERY_KEYS.SPECIAL_EVENTS,
+    queryFn: async () => {
+      const res = await axiosInstance.get("/special-events", {
+        params: { includeInactive: "true" }
+      });
+      const list = res.data?.data || res.data;
+      return Array.isArray(list) ? list : [];
+    }
+  });
+};
+
+// Create Special Event Mutation
+export const useCreateSpecialEventMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (payload) => {
+      const res = await axiosInstance.post("/special-events", payload);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.SPECIAL_EVENTS });
+    }
+  });
+};
+
+// Update Special Event Mutation
+export const useUpdateSpecialEventMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async ({ id, data }) => {
+      const res = await axiosInstance.put(`/special-events/${id}`, data);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.SPECIAL_EVENTS });
+    }
+  });
+};
+
+// Delete Special Event Mutation
+export const useDeleteSpecialEventMutation = () => {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: async (id) => {
+      const res = await axiosInstance.delete(`/special-events/${id}`);
+      return res.data;
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: QUERY_KEYS.SPECIAL_EVENTS });
     }
   });
 };

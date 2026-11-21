@@ -13,7 +13,11 @@ import {
   useRescheduleStudentMutation,
   useTogglePaymentMutation,
   useSectionsQuery,
-  useCreateSectionMutation
+  useCreateSectionMutation,
+  useSpecialEventsQuery,
+  useCreateSpecialEventMutation,
+  useUpdateSpecialEventMutation,
+  useDeleteSpecialEventMutation
 } from "../../hooks/useAdminQueries";
 
 export const AdminLayout = ({ onLogout }) => {
@@ -33,6 +37,7 @@ export const AdminLayout = ({ onLogout }) => {
   const { data: inquiries = [] } = useInquiriesQuery();
   const { data: backendStats } = useStatsQuery();
   const { data: sections = [] } = useSectionsQuery();
+  const { data: specialEvents = [] } = useSpecialEventsQuery();
 
   // TanStack Mutations
   const createBatchMutation = useCreateBatchMutation();
@@ -41,6 +46,9 @@ export const AdminLayout = ({ onLogout }) => {
   const rescheduleStudentMutation = useRescheduleStudentMutation();
   const togglePaymentMutation = useTogglePaymentMutation();
   const createSectionMutation = useCreateSectionMutation();
+  const createSpecialEventMutation = useCreateSpecialEventMutation();
+  const updateSpecialEventMutation = useUpdateSpecialEventMutation();
+  const deleteSpecialEventMutation = useDeleteSpecialEventMutation();
 
   const showToast = (msg) => {
     setToastMessage(msg);
@@ -64,6 +72,7 @@ export const AdminLayout = ({ onLogout }) => {
         isSidebarOpen={isSidebarOpen}
         setIsSidebarOpen={setIsSidebarOpen}
         batchesCount={batches.length}
+        specialEventsCount={specialEvents.length}
         bookingsCount={registrations.length}
         inquiriesCount={inquiries.length}
       />
@@ -88,12 +97,16 @@ export const AdminLayout = ({ onLogout }) => {
                 inquiries,
                 backendStats,
                 sections,
+                specialEvents,
                 createBatchMutation,
                 updateBatchMutation,
                 rescheduleBatchMutation,
                 rescheduleStudentMutation,
                 togglePaymentMutation,
                 createSectionMutation,
+                createSpecialEventMutation,
+                updateSpecialEventMutation,
+                deleteSpecialEventMutation,
                 showToast
               }}
             />

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
 import { AdminLayout } from "./components/layout/AdminLayout";
 import { OverviewPage } from "./pages/OverviewPage";
+import { SpecialEventsPage } from "./pages/SpecialEventsPage";
 import { BatchesPage } from "./pages/BatchesPage";
 import { BookingsPage } from "./pages/BookingsPage";
 import { InquiriesPage } from "./pages/InquiriesPage";
@@ -37,6 +38,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<AdminLayout onLogout={handleLogout} />}>
           <Route index element={<OverviewPage />} />
+          <Route path="special-events" element={<SpecialEventsPage />} />
           <Route path="batches" element={<BatchesPage />} />
           <Route path="bookings" element={<BookingsPage />} />
           <Route path="products" element={<ProductsPage />} />

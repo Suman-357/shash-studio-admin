@@ -6,11 +6,13 @@ export const Sidebar = ({
   isSidebarOpen,
   setIsSidebarOpen,
   batchesCount = 0,
+  specialEventsCount = 0,
   bookingsCount = 0,
   inquiriesCount = 0
 }) => {
   const navItems = [
     { to: "/", label: "Executive Overview", icon: "dashboard", end: true },
+    { to: "/special-events", label: "Special Events", icon: "celebration", count: specialEventsCount },
     { to: "/batches", label: "Batches & Time Slots", icon: "schedule", count: batchesCount },
     { to: "/bookings", label: "Student Rosters", icon: "groups", count: bookingsCount },
     { to: "/products", label: "Store & Equipment", icon: "shopping_cart" },
