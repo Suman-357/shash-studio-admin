@@ -24,6 +24,7 @@ const EMPTY_FORM = {
   highlightsText:
     "21 Days Interactive Zoom Live Sessions\nAge Limit: 14 Years & Above\nBilingual Instruction (Kannada & English)\n24-Hour Class Replays & WhatsApp Community",
   zoomLink: "",
+  whatsappGroupLink: "",
   image: "challenge-21",
   status: "open",
   isFeatured: true,
@@ -86,6 +87,7 @@ export const SpecialEventsPage = () => {
       descriptionKn: ev.descriptionKn || "",
       highlightsText: Array.isArray(ev.highlights) ? ev.highlights.join("\n") : "",
       zoomLink: ev.zoomLink || "",
+      whatsappGroupLink: ev.whatsappGroupLink || "",
       image: ev.image || "challenge-21",
       status: ev.status || "open",
       isFeatured: Boolean(ev.isFeatured),
@@ -146,6 +148,7 @@ export const SpecialEventsPage = () => {
         .map((h) => h.trim())
         .filter(Boolean),
       zoomLink: form.zoomLink.trim(),
+      whatsappGroupLink: form.whatsappGroupLink.trim(),
       image: form.image.trim() || "challenge-21",
       status: form.status,
       isFeatured: Boolean(form.isFeatured),
@@ -655,26 +658,39 @@ export const SpecialEventsPage = () => {
                     className="input-text"
                   />
                 </div>
-                <div className="flex items-center gap-5 pt-4">
-                  <label className="flex items-center gap-2 text-[12.5px] font-bold text-[#1C3325] cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={form.isActive}
-                      onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
-                      className="w-4 h-4 accent-[#1C3325]"
-                    />
-                    <span>Show on Website</span>
+                <div>
+                  <label className="block text-[11.5px] font-bold text-[#1C3325] mb-1">
+                    WhatsApp Group Invite Link (Unlocked After Payment)
                   </label>
-                  <label className="flex items-center gap-2 text-[12.5px] font-bold text-[#1C3325] cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={form.isFeatured}
-                      onChange={(e) => setForm({ ...form, isFeatured: e.target.checked })}
-                      className="w-4 h-4 accent-[#1C3325]"
-                    />
-                    <span>Featured</span>
-                  </label>
+                  <input
+                    type="url"
+                    value={form.whatsappGroupLink}
+                    onChange={(e) => setForm({ ...form, whatsappGroupLink: e.target.value })}
+                    placeholder="https://chat.whatsapp.com/..."
+                    className="input-text"
+                  />
                 </div>
+              </div>
+
+              <div className="flex items-center gap-5 pt-1">
+                <label className="flex items-center gap-2 text-[12.5px] font-bold text-[#1C3325] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.isActive}
+                    onChange={(e) => setForm({ ...form, isActive: e.target.checked })}
+                    className="w-4 h-4 accent-[#1C3325]"
+                  />
+                  <span>Show on Website</span>
+                </label>
+                <label className="flex items-center gap-2 text-[12.5px] font-bold text-[#1C3325] cursor-pointer">
+                  <input
+                    type="checkbox"
+                    checked={form.isFeatured}
+                    onChange={(e) => setForm({ ...form, isFeatured: e.target.checked })}
+                    className="w-4 h-4 accent-[#1C3325]"
+                  />
+                  <span>Featured</span>
+                </label>
               </div>
 
               <div className="pt-3 border-t border-[#E2DDD2] flex justify-end gap-2.5">

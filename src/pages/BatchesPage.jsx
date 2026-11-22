@@ -29,6 +29,7 @@ export const BatchesPage = () => {
     workshopId: "21day",
     instructorName: "Sushii",
     zoomLink: "https://zoom.us/j/shash-live",
+    whatsappGroupLink: "",
     startDate: "2026-08-01",
     endDate: "2026-08-21"
   });
@@ -589,6 +590,22 @@ export const BatchesPage = () => {
                     className="input-text"
                   />
                 </div>
+
+                <div>
+                  <label className="block text-[12.5px] font-semibold mb-1">
+                    WhatsApp Group Invite Link (Unlocked After Payment)
+                  </label>
+                  <input
+                    type="url"
+                    value={newBatchForm.whatsappGroupLink}
+                    onChange={(e) => setNewBatchForm({ ...newBatchForm, whatsappGroupLink: e.target.value })}
+                    placeholder="https://chat.whatsapp.com/..."
+                    className="input-text"
+                  />
+                  <p className="text-[11px] text-[#5C665F] mt-1">
+                    Tip: Turn ON &ldquo;Approve New Members&rdquo; in WhatsApp Group Settings so only paid students are approved.
+                  </p>
+                </div>
               </div>
 
               <div className="border-t border-[#E2DDD2] p-4 flex justify-end gap-2.5">
@@ -704,6 +721,22 @@ export const BatchesPage = () => {
                     onChange={(e) => setEditingBatch({ ...editingBatch, zoomLink: e.target.value })}
                     className="input-text"
                   />
+                </div>
+
+                <div>
+                  <label className="block text-[12.5px] font-semibold mb-1">
+                    WhatsApp Group Invite Link (Unlocked After Payment)
+                  </label>
+                  <input
+                    type="url"
+                    value={editingBatch.whatsappGroupLink || ""}
+                    onChange={(e) => setEditingBatch({ ...editingBatch, whatsappGroupLink: e.target.value })}
+                    placeholder="https://chat.whatsapp.com/..."
+                    className="input-text"
+                  />
+                  <p className="text-[11px] text-[#5C665F] mt-1">
+                    Tip: Turn ON &ldquo;Approve New Members&rdquo; in WhatsApp Group Settings so only paid students are approved.
+                  </p>
                 </div>
               </div>
 
